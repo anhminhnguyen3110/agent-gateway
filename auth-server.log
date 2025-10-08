@@ -1,0 +1,42 @@
+╔════════════════════════════════════════════════════╗
+║   RBAC External Authorization Server Running      ║
+╚════════════════════════════════════════════════════╝
+
+🚀 Server listening on 9000
+� Mode: Role-Based Access Control (RBAC)
+
+📊 Database: authz.db
+   5 users, 4 groups, 12 resources
+
+Press Ctrl+C to stop the server
+
+=== Authorization Check Request ===
+Time: 2025-10-08T15:51:49.531Z
+Full request: {
+  "attributes": {
+    "metadata_context": {},
+    "source": {
+      "labels": {},
+      "address": "\n\u000f\u0012\t127.0.0.1\u0018��\u0003",
+      "service": "",
+      "principal": ""
+    },
+    "destination": {
+      "labels": {},
+      "address": "\n\u000e\u0012\t127.0.0.1\u0018�\u0017",
+      "service": "",
+      "principal": ""
+    },
+    "request": null,
+    "context_extensions": {
+      "extensions": {
+        "\u0010����\u0001\u0012�\u0001\n e60b1b8ad4faecb9d5853f735c4b2d2f\u0012\u0003GET\u001a\u0019\n\nuser-agent\u0012\u000bcurl/8.10.1\u001a\r\n\u0006accept\u0012\u0003*/*\u001a\u001d\n\rauthorization\u0012\fBearer admin\"\f/mcp/v1/list*\tlocalhost2\u0004httpR\bHTTP/1.1": ""
+      }
+    }
+  }
+}
+Source Address: 
+	127.0.0.1��
+✗ Request DENIED - No username provided
+=====================================
+

@@ -1,0 +1,15 @@
+{
+  "name": "agentgateway-rbac",
+  "version": "1.0.0",
+  "description": "RBAC External Authorization for Agent Gateway",
+  "scripts": {
+    "test:rbac": "node mcp/test-rbac.js",
+    "server": "node server/server.js"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.9.0",
+    "@grpc/proto-loader": "^0.7.10",
+    "better-sqlite3": "^9.2.0",
+    "axios": "^1.6.0"
+  }
+}

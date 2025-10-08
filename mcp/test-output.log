@@ -1,0 +1,44 @@
+
+> mcp-test-client@1.0.0 test:rbac
+> node test-rbac.js
+
+
+╔════════════════════════════════════════════════════════════════════╗
+║   RBAC Authorization Testing - Multiple Users & Permissions       ║
+╚════════════════════════════════════════════════════════════════════╝
+
+📋 Test Configuration:
+   Gateway URL: http://localhost:3000
+   Test Delay: 500ms between tests
+
+👥 Test Users:
+   admin  → administrators (full access)
+   john   → developers (MCP + analytics)
+   jane   → developers + analysts (combined access)
+   bob    → analysts (read-only)
+   alice  → guests (limited access)
+   hacker → unknown user (no access)
+
+⏳ Waiting for services to be ready...
+
+
+🧪 Test 1: Admin Full Access
+──────────────────────────────────────────────────────────────────────
+  Testing admin user with full access...
+    POST /mcp/v1/initialize: 403
+✗ FAILED: Admin was denied access to POST /mcp/v1/initialize
+
+
+🧪 Test 2: Developer Access (john)
+──────────────────────────────────────────────────────────────────────
+  Testing developer user (john)...
+    ✓ POST /mcp/v1/initialize: 403
+✗ FAILED: Developer should have access to POST /mcp/v1/initialize
+
+
+🧪 Test 3: Analyst Read-Only (bob)
+──────────────────────────────────────────────────────────────────────
+  Testing analyst user (bob) - read-only...
+    ✓ POST /mcp/v1/list: 403
+✗ FAILED: Analyst should have access to POST /mcp/v1/list
+

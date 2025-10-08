@@ -4,7 +4,8 @@
   "description": "MCP Test Client for Agent Gateway External Authorization",
   "main": "client.js",
   "scripts": {
-    "test": "node client.js"
+    "test": "node client.js",
+    "test:rbac": "node test-rbac.js"
   },
   "dependencies": {
     "axios": "^1.6.0"
