@@ -1,0 +1,151 @@
+syntax = "proto3";
+
+package envoy.service.auth.v3;
+
+// External Authorization service definition
+service Authorization {
+  // Performs authorization check based on the attributes associated with the
+  // incoming request, and returns status `OK` or not `OK`.
+  rpc Check(CheckRequest) returns (CheckResponse);
+}
+
+message CheckRequest {
+  // The request attributes.
+  AttributeContext attributes = 1;
+}
+
+message CheckResponse {
+  // Status `OK` allows the request. Any other status indicates the request should be denied.
+  Status status = 1;
+  
+  // An message that contains HTTP response attributes.
+  DeniedHttpResponse denied_response = 2;
+  
+  // HTTP attributes for an OK response.
+  OkHttpResponse ok_response = 3;
+  
+  // Optional dynamic metadata to pass to the downstream target.
+  map<string, string> dynamic_metadata = 4;
+}
+
+message Status {
+  // The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+  int32 code = 1;
+  
+  // A developer-facing error message.
+  string message = 2;
+}
+
+message AttributeContext {
+  // The source of a network activity.
+  Peer source = 1;
+  
+  // The destination of a network activity.
+  Peer destination = 2;
+  
+  // Represents a network request, such as an HTTP request.
+  Request request = 3;
+  
+  // The origin of the context, such as a session ID or request ID.
+  ContextExtensions context_extensions = 4;
+  
+  // Dynamic metadata associated with the request.
+  map<string, string> metadata_context = 5;
+}
+
+message Peer {
+  // The address of the peer.
+  string address = 1;
+  
+  // The canonical service name of the peer.
+  string service = 2;
+  
+  // Additional labels for the peer.
+  map<string, string> labels = 3;
+  
+  // The authenticated principal of the peer.
+  string principal = 4;
+}
+
+message Request {
+  // The HTTP request time.
+  int64 time = 1;
+  
+  // The HTTP request object.
+  HttpRequest http = 2;
+}
+
+message HttpRequest {
+  // The unique ID for a request.
+  string id = 1;
+  
+  // The HTTP request method, such as `GET`, `POST`.
+  string method = 2;
+  
+  // The HTTP request headers.
+  map<string, string> headers = 3;
+  
+  // The HTTP URL path.
+  string path = 4;
+  
+  // The HTTP request `Host` header value.
+  string host = 5;
+  
+  // The HTTP URL scheme, such as `http` and `https`.
+  string scheme = 6;
+  
+  // The HTTP URL query in the format of `name1=value1&name2=value2`.
+  string query = 7;
+  
+  // The HTTP request body.
+  string body = 8;
+  
+  // The HTTP request size in bytes.
+  int64 size = 9;
+  
+  // The HTTP request protocol.
+  string protocol = 10;
+}
+
+message ContextExtensions {
+  // Unstructured map of string keys and values.
+  map<string, string> extensions = 1;
+}
+
+message HeaderValueOption {
+  // Header name/value pair.
+  HeaderValue header = 1;
+  
+  // Should the header be appended to existing values?
+  bool append = 2;
+}
+
+message HeaderValue {
+  // Header name.
+  string key = 1;
+  
+  // Header value.
+  string value = 2;
+}
+
+message DeniedHttpResponse {
+  // HTTP status code.
+  uint32 status = 1;
+  
+  // HTTP headers.
+  repeated HeaderValueOption headers = 2;
+  
+  // HTTP body.
+  string body = 3;
+}
+
+message OkHttpResponse {
+  // HTTP headers to add.
+  repeated HeaderValueOption headers = 1;
+  
+  // Additional headers to append.
+  repeated HeaderValueOption headers_to_append = 2;
+  
+  // Headers to remove.
+  repeated string headers_to_remove = 3;
+}
