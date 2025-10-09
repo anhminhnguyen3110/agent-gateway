@@ -4,7 +4,14 @@
   "description": "RBAC External Authorization for Agent Gateway",
   "scripts": {
     "test:rbac": "node mcp/test-rbac.js",
-    "server": "node server/server.js"
+    "test:llm": "node test-llm.js",
+    "server": "node server/server.js",
+    "start": "bash start.sh",
+    "metrics": "node view-metrics.js",
+    "metrics:watch": "node view-metrics.js --watch",
+    "jaeger:start": "docker-compose up -d",
+    "jaeger:stop": "docker-compose down",
+    "jaeger:logs": "docker logs jaeger-agentgateway"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.9.0",

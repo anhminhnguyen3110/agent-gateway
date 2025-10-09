@@ -1,32 +1,61 @@
+config:
+  tracing:
+    otlpEndpoint: http://localhost:4317
+    randomSampling: true
+
 binds:
-- port: 3000
-  listeners:
-  - routes:
-    - backends:
-      - mcp:
-          targets:
-          - name: everything
-            stdio:
-              cmd: npx
-              args:
-              - '@modelcontextprotocol/server-everything'
-      policies:
-        extAuthz:
-          host: localhost:9000
-        cors:
-          allowOrigins:
-          - '*'
-          allowHeaders:
-          - mcp-protocol-version
-          - content-type
-          - cache-control
-          - '*'
-          - authorization
-    - hostnames:
-      - example.com
-      matches:
-      - path:
-          pathPrefix: /
-      backends: []
-      name: test
-      ruleName: rule-1
+  - port: 3000
+    listeners:
+      - protocol: HTTP
+        name: main-listener
+        gatewayName: main-gateway
+        hostname: localhost
+        routes:
+          # --- LLM route ---
+          - name: llm-route
+            matches:
+              - path:
+                  pathPrefix: /v1/chat/completions
+            backends:
+              - ai:
+                  name: openrouter
+                  hostOverride: openrouter.ai:443
+                  provider:
+                    openAI:
+                      model: meta-llama/llama-3.3-70b-instruct:free
+                  routes:
+                    /v1/chat/completions: completions
+            policies:
+              urlRewrite:
+                authority:
+                  full: openrouter.ai
+                path:
+                  full: /api/v1/chat/completions
+              backendTLS: {}
+              backendAuth:
+                key: $OPENROUTER_API_KEY
+
+          - name: mcp-route
+            matches:
+              - path:
+                  pathPrefix: /mcp
+            backends:
+              - mcp:
+                  targets:
+                    - name: everything
+                      stdio:
+                        cmd: npx
+                        args:
+                          - "@modelcontextprotocol/server-everything"
+            policies:
+              extAuthz:
+                host: localhost:9000
+              cors:
+                allowOrigins:
+                  - "*"
+                allowHeaders:
+                  - mcp-protocol-version
+                  - content-type
+                  - cache-control
+                  - authorization
+                  - "*"

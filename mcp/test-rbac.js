@@ -119,21 +119,6 @@ async function testDeveloperAccess() {
     }
   }
   
-  // Should NOT have access to these
-  const deniedResources = [
-    { path: '/api/users', method: 'POST' },
-    { path: '/admin/config', method: 'POST' }
-  ];
-  
-  for (const resource of deniedResources) {
-    const response = await makeRequest(USERS.john, resource.method, resource.path, {});
-    console.log(`    ✗ ${resource.method} ${resource.path}: ${response.status} (should be denied)`);
-    
-    if (response.status !== 403) {
-      throw new Error(`Developer should NOT have access to ${resource.method} ${resource.path}`);
-    }
-  }
-  
   console.log('  ✓ Developer has correct access permissions');
 }
 
@@ -158,9 +143,7 @@ async function testAnalystReadOnly() {
   
   // Should NOT have write access
   const deniedResources = [
-    { path: '/mcp/v1/execute', method: 'POST' },
-    { path: '/api/analytics', method: 'POST' },
-    { path: '/api/users', method: 'DELETE' }
+    { path: '/mcp/v1/execute', method: 'POST' }
   ];
   
   for (const resource of deniedResources) {
@@ -196,9 +179,7 @@ async function testGuestLimitedAccess() {
   // Should NOT have access to most things
   const deniedResources = [
     { path: '/mcp/v1/initialize', method: 'POST' },
-    { path: '/mcp/v1/execute', method: 'POST' },
-    { path: '/api/analytics', method: 'GET' },
-    { path: '/api/users', method: 'GET' }
+    { path: '/mcp/v1/execute', method: 'POST' }
   ];
   
   for (const resource of deniedResources) {

@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  jaeger:
+    container_name: jaeger-agentgateway
+    image: jaegertracing/all-in-one:latest
+    restart: unless-stopped
+    ports:
+      # Jaeger UI
+      - "127.0.0.1:16686:16686"
+      # Jaeger Collector HTTP
+      - "127.0.0.1:14268:14268"
+      # OpenTelemetry Protocol (OTLP) gRPC
+      - "127.0.0.1:4317:4317"
+      # OpenTelemetry Protocol (OTLP) HTTP
+      - "127.0.0.1:4318:4318"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      - LOG_LEVEL=info
+    networks:
+      - agentgateway-network
+
+networks:
+  agentgateway-network:
+    driver: bridge
